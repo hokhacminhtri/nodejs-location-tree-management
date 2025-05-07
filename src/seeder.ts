@@ -17,13 +17,15 @@ async function seedDatabase() {
 
   const locationRepository = dataSource.getRepository(Location);
 
-  // Sample hierarchical data for Building A
+  // Save Building A first
   const buildingA = locationRepository.create({
     name: 'Building A',
     number: 'A',
     area: 1000.0,
   });
+  await locationRepository.save(buildingA);
 
+  // Save child locations of Building A
   const carPark = locationRepository.create({
     name: 'Car Park',
     number: 'A-CarPark',
@@ -37,7 +39,9 @@ async function seedDatabase() {
     area: 100.92,
     parent: buildingA,
   });
+  await locationRepository.save([carPark, level1]);
 
+  // Save grandchild locations of Level 1
   const lobbyLevel1 = locationRepository.create({
     name: 'Lobby Level1',
     number: 'A-01-Lobby',
@@ -59,34 +63,46 @@ async function seedDatabase() {
     parent: level1,
   });
 
-  const meetingRoom1 = locationRepository.create({
-    name: 'Meeting Room 1',
-    number: 'A-01-01-M1',
-    area: 20.11,
-    parent: masterRoom,
-  });
-
   const toiletLevel1 = locationRepository.create({
     name: 'Toilet Level 1',
     number: 'A-01-02',
     area: 30.2,
     parent: level1,
   });
+  await locationRepository.save([
+    lobbyLevel1,
+    corridorLevel1,
+    masterRoom,
+    toiletLevel1,
+  ]);
 
-  // Sample hierarchical data for Building B
+  // Save great-grandchild locations of Master Room
+  const meetingRoom1 = locationRepository.create({
+    name: 'Meeting Room 1',
+    number: 'A-01-01-M1',
+    area: 20.11,
+    parent: masterRoom,
+  });
+  await locationRepository.save(meetingRoom1);
+
+  // Save Building B first
   const buildingB = locationRepository.create({
     name: 'Building B',
     number: 'B',
     area: 2000.0,
   });
+  await locationRepository.save(buildingB);
 
+  // Save child locations of Building B
   const level5 = locationRepository.create({
     name: 'Level 5',
     number: 'B-05',
     area: 150.0,
     parent: buildingB,
   });
+  await locationRepository.save(level5);
 
+  // Save grandchild locations of Level 5
   const utilityRoom = locationRepository.create({
     name: 'Utility Room',
     number: 'B-05-11',
@@ -128,18 +144,14 @@ async function seedDatabase() {
     area: 30.0,
     parent: level5,
   });
-
-  // Save locations in hierarchical order
-  await locationRepository.save(buildingA);
-  await locationRepository.save([carPark, level1]);
-  // eslint-disable-next-line prettier/prettier
-  await locationRepository.save([lobbyLevel1, corridorLevel1, masterRoom, toiletLevel1]);
-  await locationRepository.save(meetingRoom1);
-
-  await locationRepository.save(buildingB);
-  await locationRepository.save(level5);
-  // eslint-disable-next-line prettier/prettier
-  await locationRepository.save([utilityRoom, sanitaryRoom, maleToilet, gensetRoom, pantryLevel5, corridorLevel5]);
+  await locationRepository.save([
+    utilityRoom,
+    sanitaryRoom,
+    maleToilet,
+    gensetRoom,
+    pantryLevel5,
+    corridorLevel5,
+  ]);
 
   console.log('Sample data has been seeded.');
   await dataSource.destroy();
