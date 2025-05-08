@@ -53,13 +53,19 @@ This project provides a RESTful API for managing hierarchical locations using Ne
    docker-compose up -d
    ```
 
-4. **Run the application**:
+4. **Run the seeder.ts file to import sample data into the database.**
+
+   ```bash
+   npx ts-node src/seeder.ts
+   ```
+
+5. **Run the application**:
 
    ```bash
    npm run start:dev
    ```
 
-5. **Access the API documentation**:
+6. **Access the API documentation**:
    Open your browser and navigate to `http://localhost:3000/api-docs`.
 
 ---
@@ -109,7 +115,7 @@ Below are sample images demonstrating the CRUD operations:
 ### Demo video
 
 Watch the full demo of the API in action:
-[![Demo video](docs/videos/demo.mp4)
+[Demo video](docs/videos/demo.mp4)
 
 ---
 
